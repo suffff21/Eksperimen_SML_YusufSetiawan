@@ -1,0 +1,36 @@
+name: Run Preprocessing Automatically
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  preprocess:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12.7"
+
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas scikit-learn
+
+      - name: Run Preprocessing Script
+        run: |
+          cd preprocessing
+          python automate_YusufSetiawan.py
+
+      - name: Upload Preprocessed Data as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: preprocessed_dataset
+          path: preprocessing/spotify_churn_dataset_preprocessing/
